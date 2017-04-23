@@ -53,7 +53,7 @@ class controller {
     downloadTorrents(torrents) {
 
 
-        const filteredUndefined = torrents.filter(t => t);
+        const filteredUndefined = torrents.filter(t => t && t.hasOwnProperty('magnetLink'));
 
 
         const uniqueValues = _.uniqBy(filteredUndefined, 'magnetLink');
