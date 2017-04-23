@@ -17,6 +17,7 @@ class controller {
         };
 
 
+
     }
 
 
@@ -26,7 +27,7 @@ class controller {
             'watchedStatus.event': false,
             date: {
                 //fixme
-                $gte: moment().subtract(7, 'days').toDate(),
+                $gte: moment().subtract(70, 'days').toDate(),
                 $lte: moment().add(7, 'days').toDate()
             }
         })
@@ -35,6 +36,8 @@ class controller {
     }
 
     run() {
+
+        let theEvent;
 
         return this.getEventWithinTimeFrame()
             .then(event => pirateBay.search(event.event))
@@ -50,15 +53,22 @@ class controller {
     downloadTorrents(torrents) {
 
 
-        const uniqueValues = _.uniqBy(torrents, 'magnetLink');
+        const filteredUndefined = torrents.filter(t => t);
 
-        return this.models.torrents.insertMany(uniqueValues).then(() =>
-            Promise.mapSeries(uniqueValues, q => this.torrents.downloadTorrent(q.magnetLink)))
-            .catch(err => {
-                throw err;
-            });
 
+        const uniqueValues = _.uniqBy(filteredUndefined, 'magnetLink');
+
+        if (uniqueValues.length > 0) {
+            return this.models.torrents.insertMany(uniqueValues).then(() =>
+                Promise.mapSeries(uniqueValues, q => this.torrents.downloadTorrent(q.magnetLink)))
+                .catch(err => {
+                    throw err;
+                });
+        } else {
+            console.log('did not download torrents');
+        }
     }
+
 
     getBestVideos(torrents) {
         const earlyPrelim = torrents.find(t => t.foundPrelim === true && t.type === 'Early Prelim');
@@ -67,8 +77,6 @@ class controller {
 
         return [earlyPrelim, prelim, topTorrent];
     }
-
-
 
 
     flagPrelims(torrents) {

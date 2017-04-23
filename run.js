@@ -15,6 +15,11 @@ Mongo.getConnection().then(database => {
 
     const mma = new mmaTorrent(mongo, torrents);
 
+    //const app = require('./app');
+
+    //app.listen(3000);
+
+
     //mma.clearTorrents();
 
     //mma.handleSearch('ufc 24');
