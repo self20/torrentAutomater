@@ -83,25 +83,38 @@
 <script src="http://momentjs.com/downloads/moment.min.js"></script>
 
 <script>
-    var torrentId = 'https://webtorrent.io/torrents/sintel.torrent'
+    //var torrentId = 'https://webtorrent.io/torrents/sintel.torrent';
+   var torrentId = 'magnet:?xt=urn:btih:f5c9f7bd9a9c68159338a5a65bbf8c96d983ca93&dn=UFC+Fight+Night+108+Prelims+WEB-DL+H264+Fight-BB&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969';
+
+    //var torrentId = 'magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=wss%3A%2F%2Ftracker.btorrent.xyz&tr=wss%3A%2F%2Ftracker.fastcast.nz&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F&xs=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2Fsintel.torrent';
 
     var client = new WebTorrent()
 
+
+    client.on('error', (err) => {
+        console.log(err);
+    })
+
     // HTML elements
     var $body = document.body
-    var $progressBar = document.querySelector('#progressBar')
-    var $numPeers = document.querySelector('#numPeers')
-    var $downloaded = document.querySelector('#downloaded')
-    var $total = document.querySelector('#total')
-    var $remaining = document.querySelector('#remaining')
-    var $uploadSpeed = document.querySelector('#uploadSpeed')
-    var $downloadSpeed = document.querySelector('#downloadSpeed')
+    var $progressBar = document.querySelector('#progressBar');
+    var $numPeers = document.querySelector('#numPeers');
+    var $downloaded = document.querySelector('#downloaded');
+    var $total = document.querySelector('#total');
+    var $remaining = document.querySelector('#remaining');
+    var $uploadSpeed = document.querySelector('#uploadSpeed');
+    var $downloadSpeed = document.querySelector('#downloadSpeed');
+
+    console.log('torrentid', torrentId);
 
     // Download the torrent
     client.add(torrentId, function (torrent) {
 
+        console.log('torrent', torrent);
+
         // Torrents can contain many files. Let's use the .mp4 file
         var file = torrent.files.find(function (file) {
+            console.log('file', file);
             return file.name.endsWith('.mp4')
         })
 
@@ -125,7 +138,7 @@
             $total.innerHTML = prettyBytes(torrent.length)
 
             // Remaining time
-            var remaining
+            var remaining;
             if (torrent.done) {
                 remaining = 'Done.'
             } else {
@@ -154,6 +167,8 @@
         unit = units[exponent]
         return (neg ? '-' : '') + num + ' ' + unit
     }
+
+
 </script>
 </body>
 </html>
